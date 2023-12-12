@@ -1,0 +1,141 @@
+[substitutions]  # applied from longest to shortest until the string doesn't change
+g = "ɡ"
+r = "ɹ"
+"n̩" = "ən"  # words like "certainly" can be properly mapped with a "logical E" this way
+"m̩" = "əm"
+"l̩" = "əl"
+"ɹ̩" = "əɹ"
+"ʴ" = "ɹ"
+"ɚ" = "əɹ"
+"ɝ" = "ɜɹ"
+"dʒ" = "d̠ʒ"
+"ʤ" = "d̠ʒ"
+"tʃ" = "t̠ʃ"
+"ʧ" = "t̠ʃ"
+"(" = ""
+")" = ""
+
+[weights.ipa]
+ignored = 1.0  # input item that isn't matched
+unmatched = 1.0  # pattern item that isn't matched
+pow = 0.2  # ipa_diff^ipa_pow is used to measure change, so higher numbers are more forgiving
+
+[weights.ortho]
+ignored = 0.01  # input character that isn't matched
+unmatched = 0.01  # pattern character that isn't matched
+scale = true  # scale by IPA length / ortho length
+
+[weights.map-ortho]
+add-match = 0.02  # cost to split between matches, this is to encourage longer translations, *does* introduce a performance cost the higher it is though
+
+[weights.split-syllables]
+coda-element = 0.1  # cost to not include an element in the onset, this is to encourage longer onsets
+
+[syllable-structure]
+onsets = [  # roughly adapted from https://en.wikipedia.org/wiki/English_phonology#Onset (26.10.2023)
+    "[pbtdkɡmnfvθðszʃʒhɹjlt̠ʃwd̠ʒ]|",
+    "[pbtdkɡfθsʃhv][ɹlw]",
+    "[pbtdkɡmnfvθðszʃʒhl]j",
+    "s[ptkmnfθ][ɹlw]?",
+    "s[ptkmn][ɹlw]",
+]
+
+[orthography]
+# Adapted from https://en.wikipedia.org/wiki/English_orthography#Spelling-to-sound_correspondences
+a = "ə|i|ɪ|ɛ|ɜː|aɪ|eɪ|ɔː|æ|ʌ|w|ɒ|ɛə|ɑː"
+"a[ah]" = "ə|eɪ|æ|ɛə|ɑː"
+ae = "ə|ɛ|ɪə|eɪ|aɪ|æ|iː|ɛə"
+ai = "ə|aɪiː|ɛ|aɪ|eɪ|eɪɪ|æ|ɛə"
+ao = "eɪə|eɪɒ|eɪ|ɔː|iˈoʊ|ɑːoʊ|aʊ|eɪˈɔː"
+au = "ə|oʊ|eɪ|ɔː|æ|ʌ|ɒ|aʊə|ɑː|aʊ"
+aw = "ɔː|aʊ"
+ay = "ɛ|aɪ|eɪ|əj|iː"
+e = "ə|i|ɪ|ɛ|ɜː|ɪə|eɪ|ʌ|iː|ɒ|ɛə|ɑː"
+"e[iy]" = "ə|iˈaɪ|i|ɪ|ɛ|aɪ|eɪ|ɪə|eɪɪ|æ|iː|ɛə|iːɪ"
+ea = "i'ɑː|iə|ə|ɪ|ɪə|iːæ|ɔː|ɛə|ɛ|iːə|iː|ɑː|iːɪ|eɪə|eɪɑː|eɪˈɑː|ɜː|iːeɪ|eɪ|æ"
+eau = "ɒ|ə|juː|oʊ"
+ee = "i|ɪ|ɛ|ɪə|eɪ|ʌ|iːə|iː|iːɛ|iːɪ"
+eh = "eɪ|ə|ɛə|ɛ"
+eo = "iːoʊ|ə|juː|eɪoʊ|ɛ|oʊ|iːɒ|ʌ|iːə|iː|ɒ|uːi|ɛə|wʌ"
+i = "ə|i|j|ɪ|ɜː|iː|aɪ|ɪə|æ|aɪə"
+"i?e[uw]" = "juə?|ɔɪ|ə|jɜː|iːɜː|iːʌ|juː|l|ɜː|jə|oʊ|jʊə|uː|ɛf|ʌ|iːuː|iːə|ʊə"
+ie = "iˈɛ|jə|iɛə|aɪə|iə|ieɪ|i|ɪ|iˈiː|aɪˈɛ|ɪə|aɪiː|ɛ|aɪ|iˈeɪ|iː|iːə|eɪ|iːɒ"
+o = "ə|ɪ|ɜː|oʊ|ʊ|uː|ɔː|ʌ|wʌ|ɒ|əʊ"
+oa = "ə|uːə|oʊæ|oʊə|oʊˈeɪ|oʊ|ɔː|wɑː|oʊˈɑː"
+oe = "oʊˈɛ|ɪ|uːə|oʊɛ|oʊə|ɛ|oʊ|ɜː|oʊiː|uː|oʊˈɜː|ʌ|iː|oʊˈiː"
+oeu = "uː|ɜːɹ?"
+oh = "ɒ|ə|ɔː|oʊ"
+oi = "ɔɪ|ə|i|waɪə|wæ|uːɪ|oʊɪ|wɑː|ɔɪə|oʊaɪ"
+oo = "ə|oʊ|oʊ.ɔː|ʊ|uː|ɔː|ʌ|ʊə"
+ou = "ə|ɪ|juː|ʊə?|ɜː|oʊ|ʊ|uː|ɔː|ʌ|w|ɒ|ʊə|aʊə|aʊ"
+ow = "oʊ|ʌ|əw|ɒ|aʊə|aʊ"
+oy = "ɔɪ|waɪ|i|oʊj|aɪ"
+u = "jʊə?|ə|ɪ|juː|ʊə?|ɜː|l|jə|ɛ|ʊ|uː|ʌ|w|ʊə"
+ue = "weɪ|uːɛ|juːeɪ|jʊə|uːɪ|wiː|ə|i|juːiː|uːə|ʊ|uː|wɛ|wə|juːɛ|juː|ɛ|wɪ|iː|juːə|eɪ"
+ui = "ə|weɪ|ɪ|juːə|juː|uːə|iː|aɪ|ʊ|uː|wɪ|juːɪ|uːaɪ|uːɪ|uːi|uːj|wiː"
+uu = "juː|uː|j?uːʌ|juə|uə"
+uy = "wi|aɪ|iː|jʊɪ|uːj|wiː|wiːj"
+
+w = "uː|v|w|dʌb(ə?l?j[uuːə])?"
+y = "ə|i|ɪ|ɜː|aɪ|aɪə|ð|j|waɪ"
+
+al = "ɔː"
+alf = "æf|ɑːf"
+ci = "ʃ"
+cqu = "k|kw"
+ed = "d|t"
+gu = "ɡ|ɡw"
+le = "əl|l"
+ngue = "ŋ"
+ough = "ʌf|ə|ɒf|oʊ|əf|uː|ɒx|ʌp|aʊ|ɒk|ɔː"
+qu = "k|kw"
+que = "k"
+sci = "ʃ"
+se = "z|s"
+si = "ʃ|ʒ"
+ssi = "ʃ"
+the = "ð"
+ti = "ʃ|ʒ|ʃi"
+zure = "ʒəɹ"
+
+"bb?" = "b"
+"b" = "biː"
+c = "s|ts|ʃ|ʒ|t̠ʃ|k|siː"
+cc = "ks|s|t̠ʃ|k"
+ch = "x|ʃ|t?ʃ|h|t̠ʃ|d̠ʒ|k"
+ck = "k"
+d = "d|diː"
+"d[dh]" = "ð|d|t|dj|d̠ʒ"
+dg = "d̠ʒ|dɡ"
+"ff?" = "f|v|ɛf"
+g = "x|ɡ|ʒ|d̠ʒ|[dd̠ʒ]iː"
+gg = "d̠ʒ|ɡ|ɡd̠ʒ"
+gh = "f|ə|ɡh|x|oʊ|ɡ|p|k"
+h = "h|h?eɪt̠ʃ"
+j = "j|ʒ|h|d̠ʒ|d̠ʒeɪ"
+"k[kh]?" = "k|keɪ"
+"ll?" = "ɹ|l|j|ɛl"
+"mm?" = "m|ɛm"
+"nn?" = "n|ŋ|ɛn"
+ng = "əŋɡ|ŋɡ|nʒ|nɡ|n|ŋk?|ŋ|nd̠ʒ"
+"pp?" = "p|piː"
+"pp?h" = "f||p|ph|v"
+q = "k|t̠ʃ|kj[uːu]"
+"r|rr?h" = "ɹ|ɑː|ɑɹ"
+s = "s|z|ʃ|ʒ|ɛs"
+sc = "sk|ʃ|z|s"
+sch = "ʃ|s|sk"
+sh = "ʃ|s"
+ss = "ʃ|ʒ|z|s"
+sw = "sw|zw|s"
+"tt?" = "d|ʃ|ʒ|t|t̠ʃ|tiː"
+tch = "t̠ʃ"
+th = "ð|th|θ|tθ|t|t̠ʃ"
+"vv?" = "v|viː"
+wh = "w|f|h"
+x = "ks|z|ɡʒ|kʃ|ɡz|ɛks"
+xc = "ks"
+xh = "ks|ksh|gz"
+"zz?" = "ts|ʒ|z|z[iiː]|zɛd"
+
+ph = "f"

@@ -1,0 +1,182 @@
+language = "languages/english.toml"
+
+[layout]
+order = "#STKPWHRAO*EUFRPBLGTSDZ"
+hyphen-before = "*"
+unordered = "#*"
+disambiguators = "*"
+
+# using the listing from https://en.wikipedia.org/wiki/English_phonology
+
+[weights]
+output-overlap = {} # cost for overlapping outputs
+order-violation = [ 0.01, 1.0 ] # cost for the first time, the second time, ..., all remaining times
+rule-group-violation = {}
+skip-group = 0.2
+double-match = {} # input item is matched by multiple subtranslations
+add-rule = 0 # encourage "longer" rules (`unless` rules are much faster though)
+alternative = 0.01
+disambiguator = 0.05
+anti-disambiguator = 0.2
+
+[weights.ipa]
+ignored = 0.3 # input item that isn't matched
+unmatched = {} # pattern item that isn't matched
+pow = 0.1 # ipa_diff^ipa_pow is used to measure change, so higher numbers are more forgiving
+
+[weights.ortho]
+ignored = 0.0 # input character that isn't matched
+unmatched = {} # pattern character that isn't matched
+scale = true # scale by IPA length / ortho length
+
+[weights.syllables]
+join = 0 # cost to join a syllables to a chord directly
+join-drop = { primary = { left = 0.3, right = 0.3 }, secondary = { left = 0.2, right = 0.2 }, none = { left = 0.04, right = 0.01 } } # cost to join a syllable to a chord, dropping the nucleus; by stress
+split-between = 0.15 # start a new chord at a syllable boundary
+split-inside = 0.2 # start a new chord outside a syllable boundary
+split-inside-start = "nucleus"
+split-lookahead = {} # cost for matched items that are *after* a split but associated to the chord before
+drop-fully = { primary = {}, secondary = {}, none = 0.4 }
+split-at-nucleus = { primary = {}, secondary = {}, none = 0.05 }
+
+[weights.stress-adjust] # adjust IPA matcher costs for ignored items by stress
+primary = 1.0
+secondary = 1.0
+none = { onset = 0.8, nucleus = 0.2, coda = 0.8 }
+
+[rules]
+order = ["onset", "nucleus", "coda"]
+max-one = ["nucleus"]
+
+[rules.onset]
+"s" = "S"
+"ss" = { to = "S", add-weight = 0.02, alternative = "S*" }
+"z" = "S*"
+"zz" = { to = "S*", add-weight = 0.02 }
+"t" = "T"
+"tt" = { to = "T", add-weight = 0.02, alternative = "T*" }
+"k" = "K"
+"k[nm]?k" = { to = "K", add-weight = 0.02, alternative = "K*" }
+"k[əɒɔɑ][nm]" = { to = "K", alternative = "KAUPB" } # contour
+"k#c" = { to = "KR", add-weight = 0.01 } # ortho rule
+"k[əɒɔɑ][nm][dk]" = { to = "K", add-weight = 0.02, alternative = "K*" }
+"d" = "TK"
+"d[dtk]|[tk]d" = { to = "TK", add-weight = 0.02, alternative = "TK*" }
+"p" = "P"
+"pp" = { to = "P", add-weight = 0.02, alternative = "P*" }
+"f" = "TP"
+"ff" = { to = "TP", add-weight = 0.02, alternative = "TP*" }
+"[ɛɪ][kɡ][sz]" = "KP"
+"[ɛɪ][kɡ][sz][tkdpf]" = { to = "KP", add-weight = 0.02, alternative = "KP*" }
+"w|v#w" = "W"
+"v()" = { to = "W", add-weight = 0.02 }
+"(w|v#w)(w|v#w)" = { to = "W", add-weight = 0.02, alternative = "W*" }
+"w#(wh)" = { to = "WH", add-weight = 0.01 } # ortho rule
+"kw" = "KW"
+"kə[nm]v" = "KW" # converse
+"b" = "PW"
+"b[bpw]|[pw]b" = { to = "PW", add-weight = 0.02, alternative = "PW*" }
+"[ɪə]nt" = "SPW" # entire
+"ɡ" = "TKPW"
+"ɡɡ" = { to = "TKPW", add-weight = 0.02, alternative = "TKPW*" }
+"hj?" = "H"
+"hhj?" = { to = "H", add-weight = 0.02, alternative = "H*" }
+"ʃ" = "SH"
+"[θð]" = "TH"
+"[θðt][θð]|[θð]t" = { to = "TH", add-weight = 0.02, alternative = "TH*" }
+"[t̠ʃx]" = "KH"
+"[t̠ʃxk][t̠ʃx]|[t̠ʃx]k" = { to = "KH", add-weight = 0.02, alternative = "KH*" }
+"m" = "PH"
+"mm" = { to = "PH", add-weight = 0.02, alternative = "PH*" }
+"n" = "TPH"
+"[nm]n|nm" = { to = "TPH", add-weight = 0.02, alternative = "TPH*" }
+"ɹ" = "R"
+"ɹɹ" = { to = "R", add-weight = 0.02, alternative = "R*" }
+"v" = "SR"
+"vv" = { to = "SR", add-weight = 0.02, alternative = "SR*" }
+"j" = "KWR"
+"jj" = { to = "KWR", add-weight = 0.02, alternative = "KWR*" }
+"[ʒd̠ʒ]" = "SKWR"
+"[ʒd̠ʒ][ʒd̠ʒ]" = { to = "SKWR", add-weight = 0.02, alternative = "SKWR*" }
+"[ɪə]ntəɹ." = "SPWR" # internet
+"[ɪə]ntəɹ" = "SPWR" # internet
+"l" = "HR"
+"ll" = { to = "HR", add-weight = 0.02, alternative = "HR*" }
+
+"l[ɑɒ]d̠ʒ[ɪə]kəl" = "HR-LG" # logical
+"mənt" = { to = "-PLT", add-weight = 0.02 } # lament
+
+[rules.nucleus]
+"æ#a?|[əɜ]#a" = "A"
+"[ɑɑː]#a?" = { to = "A", alternative = "AU", unless = [ ".?#o" ] }
+"ɒ#o?|[ʌɔəɜ]#o" = { to = "O", unless = [ ".?#u" ]  }
+"ɑ#o?" = { to = "O", unless = [ ".?#a", ".?#(ou)" ] }
+"[əo]#oʊ#a" = "AO" # ortho: oa
+"#o[uuːʊ]#o" = "AO" # ortho: oo
+"j#o[uuː]#o" = { to = "AO", add-weight = 0.01 } # ortho: oo
+"ɛ#e?" = { to = "E" }
+"[əɜ]#e?" = { to = "E", unless = [ ".?#[aiou]" ] }
+"[ɛæəɑɑːɜ]#a(?:..?.?.?.?.?.?)i#[ey]" = { to = "AE", syllable-lookahead = true } # words like "fancy"
+"#eiː#a|#ei#a|.?#(ae|ea)" = "AE"
+".?#(oe|eo)" = "OE"
+"o#o?ʊ#[uwe]?" = { to = "OE", unless = [".?#(o[uwe]).?#r"] }
+"ə#o?ʊ#[uwe]?" = { to = "OE", unless = [".?#(oa)"] }
+".?#(ee)" = "AOE" # ortho: ee
+"#e?[iiː]#e?" = { to = "AOE", alternative = "E", unless = [".?#(ea)"] }
+"[ʌɜə]#u" = { to = "U", unless = [".?#o"] }
+"ʊ#u?" = { to = "U", unless = [".?#(oo)"] }
+"#aɔ#[uw]?|#a?[ɑɑːɔː]#[uw]|a#aʊ#[uw]|#a.?#[uw]" = "AU"
+".?#(ou)" = "OU"
+"aʊ" = { to = "OU", unless = [".?#(au)"] }
+"[uuː]" = { to = "AOU", unless = [".?#(oo)"] }
+"j[uuː]" = { to = "AOU", unless = [".?#(oo)"], add-weight = 0.01 }
+"ɪ#i?" = { to = "EU", unless = [".?#e"] }
+"[əiɜ]#i" = "EU"
+"e#a?ɪ#[iy]?|.?#(a[iy])" = "AEU"
+"[ij]æ" = "AE"
+"ɔ#o?ɪ#[iy]?|aɪ#(i?o?)(ɑ|ɒ|[əo]ʊ)|.?#(o[iy]|[iy]o)" = "OEU"
+"aɪ" = "AOEU"
+
+[rules.coda]
+"f" = "-F"
+"v" = { to = "*F", alternative = "-F" }
+"s(?:.)" = "-F" # early s
+"z(?:.)" = { to = "-F", add-weight = 0.01,  alternative = "*F" }
+"ɹ|#r" = "-R"
+"əɹ" = { to = "-R", unordered = true } # filter
+"p" = "-P"
+"t̠ʃ|x" = "-FP"
+"b" = "-B"
+"ʃ" = "-RB"
+"(ɹ|#r)v" = "-FRB" # swerve
+"n" = "-PB"
+"(ɹ|#r|n)(t̠ʃ|x)" = "-FRPB" # lurch, lunch
+"l" = "-L"
+"li" = { to = "-L", unordered = true } # smartly
+"m" = "-PL"
+"mp" = "*PL"
+".əbəl" = { to = "-BL", add-weight = 0.02 } # degradable
+"ɡ" = "-G"
+"ɪ#i?ŋ" = { to = "-G", unordered = true } # ing
+"k" = "-BG"
+"ŋ|n[ʒd̠ʒ]" = "-PBG"
+"ŋk" = "*PBG"
+"l(?:t̠ʃ|x|[ʒd̠ʒ])" = "-LG" # divulge
+"lk" = "*LG"
+"[ʒd̠ʒ]" = "-PBLG"
+"t" = "-T"
+"θ|ð" = "*T"
+"mənt" = "-PLT" # lament
+"s" = { to = "-S", unless = "st" }
+"st" = { to = "*S", add-weight = 0.02, alternative = "-FT" } # list
+"ʃən" = "-GS" # portion
+"(tɪ|zeɪ)ʃən" = { to = "-GS", add-weight = 0.02, alternative = "*GS" } # partition, popularization
+"kʃən" = "-BGS" # diction
+"d|#et#d" = "-D"
+"əd" = { to = "-D", unordered = true } # lifted
+"z" = { to = "-Z", alternative = "-S" }
+"[sz]əs" = "-SZ"
+
+# common inversions
+#"p(?:.)r" = "-RP"
+#"t(?:.)k" = "-BGT"
