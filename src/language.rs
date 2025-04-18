@@ -178,7 +178,7 @@ impl Language {
             let list_arena = Arena::new();
 
             let match_single = |ipa_idx, ortho_idx| {
-                move |_| {
+                #[coroutine] move |_| {
                     if self.inner.weights.map_ortho.add_match > Weight::default() {
                         yield explore::Instruction::Push(self.inner.weights.map_ortho.add_match);
                     }
@@ -222,7 +222,7 @@ impl Language {
             };
         }
 
-        let explorer = |_| {
+        let explorer = #[coroutine] |_| {
             let _ = &group;
 
             let (mut ipa_idx, mut ortho_idx) = (0, 0);
@@ -351,7 +351,7 @@ impl Language {
                         .factor(edge_end - edge_begin, ortho_end - first_ortho_start);
                 }
 
-                let explorer = |_| {
+                let explorer = #[coroutine] |_| {
                     let _ = &group;
 
                     let (idx, input) = explore::branch!(weighted: group.starts.iter().enumerate().map(

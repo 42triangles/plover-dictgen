@@ -1,4 +1,4 @@
-#![feature(coroutines, coroutine_clone, coroutine_trait, is_sorted)]
+#![feature(coroutines, coroutine_clone, coroutine_trait, stmt_expr_attributes)]
 #![allow(
     clippy::if_not_else,
     clippy::needless_borrowed_reference,

@@ -57,7 +57,7 @@ fn map_instruction<W: Weight, D: Clone, D2: Clone, O: Clone>(
     mut e: impl Explorer<W, D, Return = O>,
     f: impl Fn(Instruction<W, D>) -> Option<Instruction<W, D2>> + Clone,
 ) -> impl Explorer<W, D2, Return = O> {
-    move |mut state| loop {
+    #[coroutine] move |mut state| loop {
         match Pin::new(&mut e).resume(state) {
             CoroutineState::Yielded(instruction) => match f(instruction) {
                 None => continue,

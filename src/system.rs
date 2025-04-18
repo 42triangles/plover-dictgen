@@ -1742,7 +1742,7 @@ impl System {
         let ctx_clone = Rc::clone(&ctx);
 
         #[allow(clippy::cognitive_complexity)]
-        let explorer = move |_| {
+        let explorer = #[coroutine] move |_| {
             let mut translation_state = TranslationState::new(&ctx);
             let mut chord_state = ChordState::new(&ctx);
 
@@ -1897,7 +1897,7 @@ impl System {
         // a lot of state *outside* of the actual explorer itself via `Rc`s, but
         // we want the actual limit to be at least in the same ballpark as the
         // one provided by the user
-        let state_size = 34 * mem::size_of_val(&explorer) / 10;
+        let state_size = 34 * size_of_val(&explorer) / 10;
         let max_states = max_size.map(|x| x / state_size);
 
         #[cfg(debug_assertions)]

@@ -1,4 +1,3 @@
-#![feature(is_sorted)]
 #![allow(unused_crate_dependencies)] // they're used in the `lib.rs`
 #![allow(
     clippy::if_not_else,

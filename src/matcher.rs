@@ -1154,7 +1154,7 @@ impl<Item> Matcher<Item> {
         W: explore::Weight,
         O: Clone,
     {
-        move |_| {
+        #[coroutine] move |_| {
             let mut idx = 0;
             let mut input_state = input_from.unwrap_or_else(|| input.initial());
             let mut data = initial;

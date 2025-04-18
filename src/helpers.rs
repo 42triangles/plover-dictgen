@@ -775,7 +775,7 @@ impl<T: Hash> Hash for RefList<'_, T, HashRefList> {
 #[serde(untagged)]
 enum DeFail {}
 
-#[allow(unused_tuple_struct_fields, clippy::zero_sized_map_values)]
+#[allow(dead_code, clippy::zero_sized_map_values)]
 #[derive(Deserialize)]
 #[serde(untagged)]
 enum TomlOptionDe<T> {
